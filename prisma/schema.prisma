@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id          String       @id @default(uuid())
+  displayName String       @unique
+  winCount    Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  rounds      Round[]      @relation("RoundWinner")
+  submissions Submission[]
+}
+
+model Round {
+  id           String       @id @default(uuid())
+  expression   String
+  answer       Float
+  difficulty   String       @default("medium")
+  isInteger    Boolean      @default(true)
+  state        String       @default("active")
+  startedAt    DateTime     @default(now())
+  endedAt      DateTime?
+  winnerId     String?
+  winner       User?        @relation("RoundWinner", fields: [winnerId], references: [id])
+
+  submissions  Submission[]
+
+  @@index([state])
+  @@index([startedAt])
+}
+
+model Submission {
+  id          String   @id @default(uuid())
+  roundId     String
+  userId      String
+  rawInput    String
+  parsedValue Float?
+  isCorrect   Boolean
+  receivedAt  DateTime @default(now())
+  sequence    Int
+
+  round       Round    @relation(fields: [roundId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@index([roundId, receivedAt])
+  @@index([roundId, sequence])
+}
