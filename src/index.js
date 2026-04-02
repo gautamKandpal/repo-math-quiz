@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
+const path = require('path');
 const { Server } = require('socket.io');
 const { PrismaClient } = require('@prisma/client');
 const { PrismaPg } = require('@prisma/adapter-pg');
@@ -41,6 +42,11 @@ app.use('/api', routes.health);
 io.use(authenticateSocketJWT);
 registerConnectionHandler(io, sessionManager, roundManager, prisma);
 
+// Serve React client(for render)
+app.use(express.static(path.join(__dirname, '../client/dist')));
+app.get('/{*path}', (_req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+});
 
 const PORT = process.env.PORT || 3000;
 

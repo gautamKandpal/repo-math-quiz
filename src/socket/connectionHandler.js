@@ -16,7 +16,7 @@ function registerConnectionHandler(io, sessionManager, roundManager, prisma) {
     }
     
     const currentRound = roundManager.getCurrentRound();
-    if (currentRound && (currentRound.state === 'active' || currentRound.state === 'countdown')) {
+    if (currentRound && currentRound.state === 'active') {
       socket.emit('round_started', {
         roundId: currentRound.roundId,
         expression: currentRound.question.expression,
@@ -24,6 +24,18 @@ function registerConnectionHandler(io, sessionManager, roundManager, prisma) {
         startedAt: currentRound.startedAt,
         timeoutSecs: 60
       });
+    } else if (currentRound && currentRound.state === 'countdown') {
+      // Send the ended round info so the client shows the result
+      socket.emit('round_ended', {
+        roundId: currentRound.roundId,
+        winnerName: currentRound.winnerName,
+        winnerId: currentRound.winnerId,
+        correctAnswer: currentRound.question.answer,
+        reason: currentRound.winnerId ? 'winner_found' : 'timeout'
+      });
+      // Send current countdown position
+      const secsLeft = currentRound.countdownSecondsRemaining ?? 1;
+      socket.emit('countdown_tick', { secondsRemaining: secsLeft });
     }
     
     // Broadcast user_joined to all users in room

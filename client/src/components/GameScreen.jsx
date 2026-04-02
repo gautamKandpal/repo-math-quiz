@@ -57,6 +57,7 @@ export default function GameScreen({ token, displayName }) {
     function onRoundEnded({ winnerName, winnerId, correctAnswer, reason }) {
       setRoundState('ended')
       setRoundEndInfo({ winnerName, winnerId, correctAnswer, reason })
+      setExpression(null)
       clearInterval(timerRef.current)
       setTimeLeft(null)
     }
@@ -183,7 +184,9 @@ export default function GameScreen({ token, displayName }) {
               </p>
             </>
           ) : (
-            <p style={{ color: '#475569', fontSize: '18px' }}>Waiting for the next round…</p>
+            <p style={{ color: '#475569', fontSize: '18px' }}>
+              {countdown !== null ? `Next round in ${countdown}s…` : 'Waiting for the next round…'}
+            </p>
           )}
         </div>
 

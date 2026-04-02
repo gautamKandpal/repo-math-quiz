@@ -258,6 +258,11 @@ function createRoundManager(io, prisma, questionGenerator) {
   function startCountdown() {
     let secondsRemaining = 5;
     
+    // Store on currentRound so late joiners can read it
+    if (currentRound) {
+      currentRound.countdownSecondsRemaining = secondsRemaining;
+    }
+
     // Emit initial countdown tick
     io.to('quiz').emit('countdown_tick', { secondsRemaining });
     
@@ -265,6 +270,10 @@ function createRoundManager(io, prisma, questionGenerator) {
     const countdownInterval = setInterval(() => {
       secondsRemaining--;
       
+      if (currentRound) {
+        currentRound.countdownSecondsRemaining = secondsRemaining;
+      }
+
       if (secondsRemaining > 0) {
         io.to('quiz').emit('countdown_tick', { secondsRemaining });
       } else {
