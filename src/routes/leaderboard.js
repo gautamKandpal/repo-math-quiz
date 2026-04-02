@@ -1,16 +1,4 @@
-/**
- * Leaderboard Routes
- * 
- * Handles leaderboard queries.
- * Requirements: 8.3, 8.4, 8.6
- */
 
-/**
- * Create leaderboard routes
- * 
- * @param {Object} prisma - Prisma client instance
- * @returns {Function} Express router handler
- */
 function createLeaderboardRoutes(prisma) {
   const express = require('express');
   const router = express.Router();

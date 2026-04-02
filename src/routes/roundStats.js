@@ -1,29 +1,7 @@
-/**
- * Round Stats Routes
- * 
- * Handles round statistics queries.
- * Requirements: 4.5
- */
-
-/**
- * Create round stats routes
- * 
- * @param {Object} prisma - Prisma client instance
- * @returns {Function} Express router handler
- */
-function createRoundStatsRoutes(prisma) {
+ function createRoundStatsRoutes(prisma) {
   const express = require('express');
   const router = express.Router();
-
-  /**
-   * GET /api/rounds/:id/stats
-   * 
-   * Returns latency statistics for a completed round.
-   * No authentication required (public endpoint).
-   * 
-   * Response 200: { roundId, submissionCount, latency: { minMs, maxMs, avgMs } }
-   * Response 404: { error, message } - round not found
-   */
+  
   router.get('/rounds/:id/stats', async (req, res) => {
     try {
       const { id } = req.params;

@@ -1,20 +1,5 @@
-/**
- * Session Routes
- * 
- * Handles user session creation and JWT token issuance.
- * Requirements: 7.1, 7.2, 7.3, 7.4
- */
-
 const { generateToken } = require('../auth/jwtUtils');
 
-/**
- * Create session routes
- * 
- * @param {Object} prisma - Prisma client instance
- * @param {Object} sessionManager - SessionManager instance
- * @param {Object} roundManager - RoundManager instance
- * @returns {Function} Express router handler
- */
 function createSessionRoutes(prisma, sessionManager, roundManager) {
   const express = require('express');
   const router = express.Router();
